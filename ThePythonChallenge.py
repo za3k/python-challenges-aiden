@@ -1,10 +1,12 @@
 from typing import Optional
 
 
-def lvl_1 ():
-    ans_1 = 2**38
-    print(f'lvl 1 solution: {(ans_1)}')
-    return ans_1
+
+
+def lvl_0 ():
+    ans_0 = 2**38
+    print(f'lvl 0 solution: http://www.pythonchallenge.com/pc/def/{(ans_0)}.html')
+    return ans_0
 
 def read_file(text_file_name: str) -> str:
     text_file = open(text_file_name, "r")
@@ -12,27 +14,20 @@ def read_file(text_file_name: str) -> str:
     text_file.close()
     return contents
 
-def lvl_2 ():
-    cryptic_string = read_file("lvl2.txt")
-    print(cryptic_string)
-    return cryptic_string
-    #ans_2 =
+def lvl_1 ():
+    cryptic_string = read_file("lvl1.txt")
+    new_string = shift_string(cryptic_string,2)
+    ans_1 = shift_string('map',2)
+    print(f'lvl 1 solution: http://www.pythonchallenge.com/pc/def/{(ans_1)}.html')
+    return new_string
 
-def shift_string(unshifted_text : str, shift_forward : int) -> str:
-    """
-    Shift letters in the text forward (A->B) by `shift_forward` letters
-    """
-
-    return "TEST SHIFT"
 
 def shift_letter (letter : str , shift_forward : int) -> str:
     number = letter_to_number(letter)
-    number = number + shift_forward
+    number += shift_forward
     if number > 25:
         number = number - 26
     return number_to_letter(number)
-
-    return 'x'
 
 # def letter_to_number(letter : str) -> Optional[int]:
 #     if letter == "a": return 1
@@ -67,7 +62,7 @@ def letter_to_number(letter : str) -> Optional[int]:
     '''
     Takes a lowercase english letter, and returns a corresponding number 0-25 (a->0, b->1, ... , z->25)
     '''
-    letters = 'abcdefghijklmonpqrstuvwxyz'
+    letters = 'abcdefghijklmnopqrstuvwxyz'
     for i in range(0,26):
         if letter == letters[i]:
             return i
@@ -87,27 +82,47 @@ def is_shiftable_letter(letter : str) -> bool:
     Returns True if input is a lowercase english letter. Otherwise returns False.
     '''
     letters = 'abcdefghijklmnopqrstuvwxyz'
-    if letter == letters[i]:
-        return True
-    else:
-        return False
+    for i in range(0,26):
+        if letter == letters[i]:
+            return True
+        else:
+            continue
+    return False
 
-def shift_string(string : str, shift_forward : int) -> str:
+def shift_string(unshifted_text : str, shift_forward : int) -> str:
     '''
     Takes in a string, and outputs a string with each letter shifted forward by 'shift_forward' letters.
     '''
-    new_string = '' + ' ' for i in range (0, len(string))
-    for letter in string:
-        new_string[letter] = shift_letter(letter, shift_forward)
-        return new_string
+    new_string = ''
+    for i in range (0, len(unshifted_text)):
+        if is_shiftable_letter(unshifted_text[i]):
+            new_string += shift_letter(unshifted_text[i],shift_forward)
+        else:
+            new_string += unshifted_text[i]
+    return new_string
+
+def lvl_2():
+    lvl2_text = read_file('lvl2.txt')
+    characters = set(lvl2_text)
+    print((characters))
+    for i in characters:
+        if is_shiftable_letter(i):
+            print(i)
+    return characters
+
+
+
 
 def main():
+    lvl_0()
     lvl_1()
     lvl_2()
     # print(letter_to_number('z'))
     # print(number_to_letter(25))
-    # print(shift_letter('a',27))
-    print(shift_string('aaaaaaaaaaa' , 1))
+    # print(shift_letter('a',2))
+    # print(is_shiftable_letter("a"))
+    # print(shift_string('abcde', 22))
+    # print(shift_string('def/map', 2))
 # DO NOT MODIFY BELOW THIS LINE (and don't add other top level stuff)
 
 main()
