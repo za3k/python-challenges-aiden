@@ -1,9 +1,7 @@
 from typing import Optional
 
 
-
-
-def lvl_0 ():
+def lvl_0():
     ans_0 = 2**38
     print(f'lvl 0 solution: http://www.pythonchallenge.com/pc/def/{(ans_0)}.html')
     return ans_0
@@ -14,50 +12,26 @@ def read_file(text_file_name: str) -> str:
     text_file.close()
     return contents
 
-def lvl_1 ():
+def lvl_1():
+    """Solve the lvl 1 puzzle (at http://www.pythonchallenge.com/pc/def/map.html) and print the url to lvl 2"""
     cryptic_string = read_file("lvl1.txt")
     new_string = shift_string(cryptic_string,2)
+    print(f'lvl 1 decoded hint: {new_string}')
+    # Hint says to shift the URL!
+    # The original url is http://www.pythonchallenge.com/pc/def/map.html
+    # The correct part to shift is just                         ^^^
     ans_1 = shift_string('map',2)
-    print(f'lvl 1 solution: http://www.pythonchallenge.com/pc/def/{(ans_1)}.html')
-    return new_string
+    print(f'lvl 1 solution: http://www.pythonchallenge.com/pc/def/{ans_1}.html')
 
-
-def shift_letter (letter : str , shift_forward : int) -> str:
-    number = letter_to_number(letter)
+def shift_letter(letter : str , shift_forward : int) -> str:
+    """Ex. shifting A forward by 2 gives C"""
+    number = letter_to_number(letter) # Ex. C -> 3
     number += shift_forward
-    if number > 25:
-        number = number - 26
-    return number_to_letter(number)
+    #if number > 25:
+    #    number = number - 26
+    number = number % 26
+    return number_to_letter(number) # Ex. 5 -> E
 
-# def letter_to_number(letter : str) -> Optional[int]:
-#     if letter == "a": return 1
-#     elif letter == "b": return 2
-#     elif letter == "c": return 3
-#     elif letter == "d": return 4
-#     elif letter == "e": return 5
-#     elif letter == "f": return 6
-#     elif letter == "g": return 7
-#     elif letter == "h": return 8
-#     elif letter == "i": return 9
-#     elif letter == "j": return 10
-#     elif letter == "k": return 11
-#     elif letter == "l": return 12
-#     elif letter == "m": return 13
-#     elif letter == "n": return 14
-#     elif letter == "o": return 15
-#     elif letter == "p": return 16
-#     elif letter == "q": return 17
-#     elif letter == "r": return 18
-#     elif letter == "s": return 19
-#     elif letter == "t": return 20
-#     elif letter == "u": return 21
-#     elif letter == "v": return 22
-#     elif letter == "w": return 23
-#     elif letter == "x": return 24
-#     elif letter == "y": return 25
-#     elif letter == "z": return 26
-#     else:
-#         return None
 def letter_to_number(letter : str) -> Optional[int]:
     '''
     Takes a lowercase english letter, and returns a corresponding number 0-25 (a->0, b->1, ... , z->25)
@@ -79,26 +53,32 @@ def number_to_letter(number : int) -> Optional[str]:
 
 def is_shiftable_letter(letter : str) -> bool:
     '''
-    Returns True if input is a lowercase english letter. Otherwise returns False.
+    Returns True if input is a lowercase english letter. Otherwise, returns False.
     '''
+    #return letter in 'abcdefghijklmnopqrstuvwxyz'
+    #if letter in 'abcdefghijklmnopqrstuvwxyz':
+    #    return True
+    #else:
+    #    return False
     letters = 'abcdefghijklmnopqrstuvwxyz'
-    for i in range(0,26):
-        if letter == letters[i]:
+    for candidate in letters:
+        if letter == candidate:
             return True
-        else:
-            continue
     return False
 
 def shift_string(unshifted_text : str, shift_forward : int) -> str:
     '''
     Takes in a string, and outputs a string with each letter shifted forward by 'shift_forward' letters.
+    Ex. shifting A forward by 2 gives C
+
+    Punctuation and spaces remain unchanged.
     '''
     new_string = ''
-    for i in range (0, len(unshifted_text)):
-        if is_shiftable_letter(unshifted_text[i]):
-            new_string += shift_letter(unshifted_text[i],shift_forward)
+    for letter in unshifted_text:
+        if is_shiftable_letter(letter):
+            new_string += shift_letter(letter, shift_forward)
         else:
-            new_string += unshifted_text[i]
+            new_string += letter
     return new_string
 
 def lvl_2():
@@ -109,8 +89,6 @@ def lvl_2():
         if is_shiftable_letter(i):
             print(i)
     return characters
-
-
 
 
 def main():
