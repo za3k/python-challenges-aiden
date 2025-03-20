@@ -81,6 +81,10 @@ def lvl_2():
 def lvl_3():
     lvl3_text = read_file('lvl3.txt')
     ans3 = ''
+    # Regex version
+    #pattern = '[a-z][A-Z][A-Z][A-Z][a-z][A-Z][A-Z][A-Z][a-z]'
+    #for m in re.finditer(pattern, lvl3_text):
+    #    ans3 += m[0][4]
     for index in range(4, len(lvl3_text)-4):
         left_character = lvl3_text[index - 1]
         right_character = lvl3_text[index + 1]
