@@ -1,5 +1,5 @@
 from typing import Optional
-
+import re
 
 def lvl_0():
     ans_0 = 2**38
@@ -52,7 +52,7 @@ def number_to_letter(number : int) -> Optional[str]:
             return letters[i]
 
 def is_shiftable_letter(letter : str) -> bool:
-    return is_lower(letter)
+    return letter.islower()
 
 def shift_string(unshifted_text : str, shift_forward : int) -> str:
     '''
@@ -82,9 +82,9 @@ def lvl_3():
     lvl3_text = read_file('lvl3.txt')
     ans3 = ''
     # Regex version
-    #pattern = '[a-z][A-Z][A-Z][A-Z][a-z][A-Z][A-Z][A-Z][a-z]'
+    #pattern = '[a-z][A-Z][A-Z][A-Z]([a-z])[A-Z][A-Z][A-Z][a-z]'
     #for m in re.finditer(pattern, lvl3_text):
-    #    ans3 += m[0][4]
+    #    ans3 += m[1]
     for index in range(4, len(lvl3_text)-4):
         left_character = lvl3_text[index - 1]
         right_character = lvl3_text[index + 1]
@@ -107,19 +107,35 @@ def lvl_3():
             ans3 += character
     print(f'lvl 3 solution: http://www.pythonchallenge.com/pc/def/{ans3}.php')
 
-def is_upper(character: str) -> bool:
-    '''
-    Checks if a letter is uppercase: returns True if yes, returns False if no.
-    '''
-    return character in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+def cached_get(url, dbpath="linkedlist.db"):
+    """Returns the text at a URL (uses an on-disk cache)"""
+    import requests
+    import shelve
+    with shelve.open(dbpath) as db:
+        if url not in db:
+            r = requests.get(url)
+            db[url] = r.text
+        return db[url]
 
-def is_lower(character: str) -> bool:
+def get_number(text: str) -> int:
     '''
-    Checks if a letter is lowercase: returns True if yes, returns False if no.
+    Take the text of a lvl3 puzzle, ex: "and the next nothing is 44827"
+    returns 44827
     '''
-    return character in 'abcdefghijklmnopqrstuvwxyz'
+    numbers = int(text[-5:])
+    return numbers
 
+def next_url_is(numbers: int) -> str:
+    return f'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing={numbers}'
 
+def lvl_4():
+    #next_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=12345'
+    next_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=8022'
+    while True:
+        text = cached_get(next_url)
+        numbers = get_number(text)
+        next_url = next_url_is(numbers)
+        print(next_url)
 
 
 def main():
@@ -127,7 +143,9 @@ def main():
     lvl_1()
     lvl_2()
     lvl_3()
-
+    print(get_number('and the next nothing is 44827'))
+    print(get_number('and the next nothing is 559'))
+    lvl_4()
     # print(letter_to_number('z'))
     # print(number_to_letter(25))
     # print(shift_letter('a',2))
