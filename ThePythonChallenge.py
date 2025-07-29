@@ -117,34 +117,61 @@ def cached_get(url, dbpath="linkedlist.db"):
             db[url] = r.text
         return db[url]
 
+def reverse_string(string: str) -> str:
+    reversed_string = string[::-1]
+    return reversed_string
+
+def is_digit(character: str) -> bool:
+    return character in "0123456789"
+
+def digits_to_number(digits: list[int]) -> int:
+    number = 0
+    for digit in digits:
+        number = number * 10 + digit
+    return number
+
 def get_number(text: str) -> int:
     '''
     Take the text of a lvl3 puzzle, ex: "and the next nothing is 44827"
     returns 44827
     '''
-    numbers = int(text[-5:])
-    return numbers
+
+    number = [] # type: list[int]
+
+    for character in reverse_string(text):
+        #Check if last character of text is a digit
+        last_is_digit = is_digit(character)
+
+        if last_is_digit:
+            #somehow add that to number
+            digit = int(character)
+            number = [digit] + number
+        else:
+            return digits_to_number(number)
 
 def next_url_is(numbers: int) -> str:
     return f'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing={numbers}'
 
 def lvl_4():
-    #next_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=12345'
+    next_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=12345'
     next_url = 'http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=8022'
     while True:
         text = cached_get(next_url)
         numbers = get_number(text)
+        if numbers == 0:
+            print(text)
+            return
         next_url = next_url_is(numbers)
         print(next_url)
-
 
 def main():
     lvl_0()
     lvl_1()
     lvl_2()
     lvl_3()
-    print(get_number('and the next nothing is 44827'))
-    print(get_number('and the next nothing is 559'))
+    #print(digits_to_number([3,4,5,6,7]))
+    #print(get_number('and the next nothing is 44827'))
+    #print(get_number('and the next nothing is 559'))
     lvl_4()
     # print(letter_to_number('z'))
     # print(number_to_letter(25))
